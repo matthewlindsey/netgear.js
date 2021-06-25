@@ -1231,6 +1231,42 @@ class NetgearRouter {
   }
 
   /**
+   * Set Traffic Meter options
+   * @param {number} newControlOption - values can be "No Limit", `Download only. Both Directions.
+   * @param {number} newMonthlyLimit - the traffic limit (up to 1 million megabytes/minutes, depending on type of limit)
+   * @param {number} restartHour - hour to begin traffic metering (0–24)
+   * @param {number} restartMinute - minute to begin traffic metering (0–60)
+   * @param {number} restartDay - day of month to begin traffic metering (1–31)
+   * @returns {Promise<finished>}
+   */
+  async setTrafficMeterOptions(
+    newControlOption,
+    newNewMonthlyLimit,
+    restartHour,
+    restartMinute,
+    restartDay
+  ) {
+    try {
+      await this._configurationStarted();
+      const message = soap.setTrafficMeterOptions(
+        this.sessionId,
+        newControlOption,
+        newNewMonthlyLimit,
+        restartHour,
+        restartMinute,
+        restartDay
+      );
+      await this._queueMessage(soap.action.setTrafficMeterOptions, message);
+      await this._configurationFinished().catch(() => {
+        // console.log(`finished with warning`);
+      });
+      return Promise.resolve(true);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  /**
    * Enable or Disable Traffic Meter statistics
    * @param {boolean} enable - true to enable, false to disable.
    * @returns {Promise<finished>}

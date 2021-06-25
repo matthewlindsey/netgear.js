@@ -12,6 +12,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
+    "prettier/prettier": ["warn", { printWidth: 100 }],
     "no-underscore-dangle": "off",
   },
 };
